@@ -233,7 +233,11 @@ def department_placeholder(name):
 @app.route("/department/admin", methods=["GET"])
 @require_admin
 def admin_module():
-    source = request.args.get("source", "both")
+    source = request.args.get("source")
+    if source:
+        session["last_admin_source"] = source
+    else:
+        source = session.get("last_admin_source", "both")
     return render_admin_module(selected_source=source)
 
 
@@ -527,6 +531,7 @@ def delete_user(employee_id):
 def sync_mantra_admin():
     active_only = request.form.get("active_only") == "true"
     source = request.form.get("source", "both")
+    session["last_admin_source"] = source
 
     include_staff = source in ("both", "staff")
     include_associates = source in ("both", "associates")

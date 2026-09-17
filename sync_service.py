@@ -139,6 +139,7 @@ def upsert_employees_to_postgres(records: List[Dict[str, Any]], batch_size: int 
                     "last_synced_at": stmt.excluded.last_synced_at,
                     "updated_at": stmt.excluded.updated_at,
                 },
+                where=(Employee.source_view.is_distinct_from('view_EmployeeMaster_Report_Staff'))
             )
 
             session.execute(stmt)
